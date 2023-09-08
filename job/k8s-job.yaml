@@ -1,0 +1,28 @@
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: namespace-info-extract-job
+spec:
+  selector: {}
+  template:
+    metadata:
+      name: namespace-info-extract-job
+    spec:
+      containers:
+        - name: namespace-info-extract-job
+          image: 'quay.io/pittar/namespace-data-export:latest'
+          command:
+            - ./export-data.sh
+          volumeMounts:
+            - mountPath: "opt/app-root/src/.aws"
+              name: noobaaconfig
+              readOnly: true
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      volumes:
+        - name: noobaaconfig
+          secret:
+            secretName: noobaaconfig
+      restartPolicy: Never
