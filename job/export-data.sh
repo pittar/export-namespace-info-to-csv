@@ -32,5 +32,6 @@ s3=$(oc get route s3 -o go-template="{{.spec.host}}" -n openshift-storage)
 bucket=$(oc get cm reports -o go-template="{{.data.BUCKET_NAME}}")
 
 aws --profile=noobaa \
+  --no-verify-ssl \
   --endpoint-url=https://$s3 \
   s3 cp namespace-export.csv s3://$bucket
